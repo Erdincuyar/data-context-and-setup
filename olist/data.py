@@ -1,7 +1,6 @@
 from pathlib import Path
 import pandas as pd
 
-
 class Olist:
     """
     The Olist class provides methods to interact with Olist's e-commerce data.
@@ -20,7 +19,25 @@ class Olist:
         Its keys should be 'sellers', 'orders', 'order_items' etc...
         Its values should be pandas.DataFrames loaded from csv files
         """
-        pass  # YOUR CODE HERE
+        # 1. CSV dosyalarının olduğu dizini belirle
+        csv_path = Path("~/.workintech/olist/data/csv").expanduser()
+
+        # 2. Sadece CSV dosyalarını seç
+        file_paths = [f for f in csv_path.iterdir() if f.is_file() and f.suffix == '.csv']
+
+        # 3. Dosya isimlerinden temiz anahtarlar oluştur
+        key_names = [
+            f.name.replace('olist_', '').replace('_dataset.csv', '').replace('.csv', '') 
+            for f in file_paths
+        ]
+
+        # 4. DataFrame'leri içeren sözlüğü oluştur
+        data = {}
+        for key, path in zip(key_names, file_paths):
+            data[key] = pd.read_csv(path)
+
+        # 5. Sözlüğü döndür (Çok önemli!)
+        return data
 
     def ping(self):
         """
